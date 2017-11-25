@@ -11,9 +11,11 @@ import java.awt.Color;
 public class RayTracer {
     public static final int width = 1920;
     public static final int height = 1080;
-    public static final int alias = 1;
+    public static final int alias = 2;
     public static final float clipDist = 0.001f;
     public static final float maxBounce = 5;
+    public static final float gamma = 2.2f;
+    public static final float invgamma = 1.0f/gamma;
 
     public static float[] rotmat;
     public static float[] sundir;
@@ -246,7 +248,7 @@ public class RayTracer {
         int objectID = -1;
 
         float[] floor = floorIntersect(0.0f, ro, rd);
-        if (floor == null || Math.abs(floor[0]) > 16.0f) {
+        if (floor == null || Math.abs(floor[0]) > 20.0f) {
 
             floor = null;
         }
@@ -277,18 +279,21 @@ public class RayTracer {
             if (intersect == null) return WHITE;
             else return BLACK;
         }
-
+        
+        float[] color = BLACK;
+        float[] pos = null;
+        float[] nor = null;
+        if (intersect != null) {
+            pos = vadd(ro, vsmul(rd, intersect[0]));
+            nor = new float[] {intersect[1], intersect[2], intersect[3]};
+            color = BLACK;
+        }
         if (intersect == null) {
             float[] bottom = WHITE;
             float[] zenith = new float[] {0.3f, 0.7f, 1.0f};
-            return vmix(bottom, zenith, rd[1]/2.0f + 0.5f);
+            color = vmix(bottom, zenith, rd[1]/2.0f + 0.5f);
         }
-
-        float[] pos = vadd(ro, vsmul(rd, intersect[0]));
-        float[] nor = new float[] {intersect[1], intersect[2], intersect[3]};
-        float[] color = BLACK;
-
-        if (objectID == 0) {
+        else if (objectID == 0) {
             float[] objcol;
             if (((int)Math.floor(pos[0]) + (int)Math.floor(pos[2])) % 2 == 0) {
                 objcol = WHITE;
@@ -345,7 +350,7 @@ public class RayTracer {
         rd = vmatmultiply(rotmat, rd);
 
         float[] color = drawRay(ro, rd, 0, 0);
-        return vspow(color, 0.45f);
+        return vspow(color, invgamma);
     }
 
     static void drawImage(WritableRaster r) {
@@ -374,5 +379,6 @@ public class RayTracer {
         }
         r.setDataElements(0,0,width,height,pixels);
     }
+
 
 }
