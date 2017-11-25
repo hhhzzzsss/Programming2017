@@ -9,7 +9,6 @@ import java.awt.Graphics;
 import java.awt.Dimension;
 import java.awt.Color;
 public class RayTracer {
-    
     public static final int width = 1920;
     public static final int height = 1080;
     public static final int alias = 1;
