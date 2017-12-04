@@ -12,7 +12,8 @@ class Sort {
         }
         System.out.println();
         
-        insertion(array);
+        //selection(array);
+        mergeSort(array, 0, array.length-1);
         System.out.print(array[0]);
         for (int i = 1; i < array.length; i++) {
             System.out.print(", ");
@@ -54,19 +55,69 @@ class Sort {
     }
 
     public static void quickSort(int[] array, int start, int end) {
+        System.out.println(end-start);
+        if (end-start == 1) {
+            if (array[start]>array[end]) {
+                int t = array[start];
+                array[start] = array[end];
+                array[end] = t;
+            }
+            return;
+        }
+        else if (end-start == 0) {
+            return;
+        }
+        int r1 = start;
+        int r2 = end;
         int pivot = array[end];
-        while (start < end) { //partition
+        start--;
+        end++;
+        while (true) { //partition
+            start++;
             while (array[start] < pivot) {
                 start++;
             }
-            while(array[end] >= pivot) {
+            end--;
+            while(array[end] > pivot) {
                 end--;
+            }
+            if (start>=end) {
+                break;
             }
             int t = array[start];
             array[start] = array[end];
             array[end] = t;
         }
-
+        quickSort(array, r1, start-1);
+        quickSort(array, start, r2);
+    }
+    
+    public static void mergeSort(int[] array, int start, int end) {
+        if (end==start) {
+            return;
+        }
+        int midpoint = start + (end-start)/2;
+        mergeSort(array, start, midpoint);
+        mergeSort(array, midpoint+1, end);
+        int length = end-start + 1;
+        int[] buffer = new int[length];
+        int i = 0;
+        int i1 = start;
+        int i2 = midpoint+1;
+        while(i < length) {
+            if (!(i2 <= end) || i1 <= midpoint && array[i1] < array[i2]) {
+                buffer[i] = array[i1];
+                i1++;
+            }
+            else {
+                buffer[i] = array[i2];
+                i2++;
+            }
+            i++;
+        }
+        for (i = 0; i < length; i++) {
+            array[start+i] = buffer[i];
+        }
     }
 
 }
