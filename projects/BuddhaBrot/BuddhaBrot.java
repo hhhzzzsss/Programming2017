@@ -14,8 +14,8 @@ public class BuddhaBrot {
     static final int width = 800;
     static final int height = 800;
     static final int maxIterations = 1000;
-    static final int samples = 400000000;
-    static final int colorDiv = 7000;
+    static final int samples = 40000000;
+    static final int colorDiv = 700;
 
     public static BufferedImage initImg;
     public static int initImgWidth;
@@ -23,6 +23,7 @@ public class BuddhaBrot {
     public static byte[] initImgArray;
     public static int[] finImgArray;
     public static WritableRaster finImgRaster;
+    public static BufferedImage img;
 
     public static SplittableRandom rand = new SplittableRandom();
     
@@ -30,7 +31,7 @@ public class BuddhaBrot {
         JFrame frame = new JFrame("Buddhabrot");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         finImgRaster = img.getRaster();
         JPanel panel = new JPanel() {
             @Override
